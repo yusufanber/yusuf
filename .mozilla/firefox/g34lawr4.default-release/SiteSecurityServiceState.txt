@@ -16,7 +16,7 @@ yastatic.net:HSTS	2	18292	1623670615414,1,1,2
 a3698060313.cdn.optimizely.com:HSTS	0	18290	1596068175600,1,0,2
 about.gitlab.com:HSTS	0	18292	1580470781884,1,0,2
 cdn.optimizely.com:HSTS	1	18292	1596238626548,1,0,2
-incoming.telemetry.mozilla.org:HSTS	3	18292	1596238624474,1,0,2
+incoming.telemetry.mozilla.org:HSTS	3	18292	1596239084515,1,0,2
 www.yandex.com:HSTS	2	18292	1612006686309,1,1,2
 octocaptcha.com:HSTS	0	18292	1612006275783,1,1,2
 avatars1.githubusercontent.com:HSTS	0	18292	1612028417359,1,0,2
@@ -43,7 +43,7 @@ profile.skype.com:HSTS	1	18292	1612006689783,1,1,2
 api.asm.skype.com:HSTS	1	18292	1612006689937,1,1,2
 avatars2.githubusercontent.com:HSTS	0	18292	1612028417363,1,0,2
 login.live.com:HSTS	1	18292	1612006688034,1,0,2
-outlook.live.com:HSTS	1	18292	1612006969875,1,1,2
+outlook.live.com:HSTS	1	18292	1612007270086,1,1,2
 normandy.cdn.mozilla.net:HSTS	3	18292	1612006823768,1,0,2
 avatars0.githubusercontent.com:HSTS	0	18292	1612028577218,1,0,2
 mc.admetrica.ru:HSTS	1	18292	1612006082765,1,0,2
