@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xbel version="1.0"
+      xmlns:bookmark="http://www.freedesktop.org/standards/desktop-bookmarks"
+      xmlns:mime="http://www.freedesktop.org/standards/shared-mime-info"
+>
+  <bookmark href="file:///home/yusuf/Masa%C3%BCst%C3%BC/Ads%C4%B1z%201" added="2020-01-27T13:54:45Z" modified="2020-01-27T13:54:45Z" visited="2020-01-27T13:54:46Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="LibreOffice 6.0" exec="&apos;soffice %u&apos;" modified="2020-01-27T13:54:45Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/yusuf/Masa%C3%BCst%C3%BC/Ads%C4%B1z%201.odt" added="2020-01-27T13:54:46Z" modified="2020-01-30T12:12:15Z" visited="2020-01-27T13:54:46Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/vnd.oasis.opendocument.text"/>
+        <bookmark:applications>
+          <bookmark:application name="LibreOffice 6.0" exec="&apos;soffice %u&apos;" modified="2020-01-30T12:12:15Z" count="39"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/yusuf/file.txt" added="2020-01-29T07:58:26Z" modified="2020-01-29T07:58:26Z" visited="2020-01-29T07:58:26Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/plain"/>
+        <bookmark:groups>
+          <bookmark:group>gedit</bookmark:group>
+        </bookmark:groups>
+        <bookmark:applications>
+          <bookmark:application name="gedit" exec="&apos;gedit %u&apos;" modified="2020-01-29T07:58:26Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/yusuf/Masa%C3%BCst%C3%BC/KaliLinux&apos;a%20giri%C5%9F.pdf" added="2020-01-30T06:02:10Z" modified="2020-01-30T06:43:09Z" visited="2020-01-30T06:02:10Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/pdf"/>
+        <bookmark:applications>
+          <bookmark:application name="Firefox" exec="&apos;firefox %u&apos;" modified="2020-01-30T06:02:10Z" count="1"/>
+          <bookmark:application name="Document Viewer" exec="&apos;evince %u&apos;" modified="2020-01-30T06:43:09Z" count="3"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+</xbel>

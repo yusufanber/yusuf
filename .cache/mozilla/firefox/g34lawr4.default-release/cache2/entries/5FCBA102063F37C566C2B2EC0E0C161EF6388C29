@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html itemscope="itemscope" itemtype="http://schema.org/Article" lang="en-US">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	<link rel="profile" href="http://gmpg.org/xfn/11" />
+	<link rel="pingback" href="http://blog.oguzhan.info/xmlrpc.php" />
+	<!--[if lt IE 9]>
+	<script src="http://blog.oguzhan.info/wp-content/themes/independent-publisher/js/html5.js" type="text/javascript"></script>
+	<![endif]-->
+	<title>Golang + Git Flow + Docker ve Gitlab CI &#8211; Oğuzhan Blog</title>
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Oğuzhan Blog &raquo; Feed" href="http://blog.oguzhan.info/?feed=rss2" />
+<link rel="alternate" type="application/rss+xml" title="Oğuzhan Blog &raquo; Comments Feed" href="http://blog.oguzhan.info/?feed=comments-rss2" />
+<link rel="alternate" type="application/rss+xml" title="Oğuzhan Blog &raquo; Golang + Git Flow + Docker ve Gitlab CI Comments Feed" href="http://blog.oguzhan.info/?feed=rss2&#038;p=1589" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/blog.oguzhan.info\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.0.8"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56760,9792,65039],[55358,56760,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='wp-block-library-css'  href='http://blog.oguzhan.info/wp-includes/css/dist/block-library/style.min.css?ver=5.0.8' type='text/css' media='all' />
+<link rel='stylesheet' id='genericons-css'  href='http://blog.oguzhan.info/wp-content/themes/independent-publisher/fonts/genericons/genericons.css?ver=3.1' type='text/css' media='all' />
+<link rel='stylesheet' id='independent-publisher-style-css'  href='http://blog.oguzhan.info/wp-content/themes/independent-publisher/style.css?ver=5.0.8' type='text/css' media='all' />
+<link rel='stylesheet' id='customizer-css'  href='http://blog.oguzhan.info/wp-admin/admin-ajax.php?action=independent_publisher_customizer_css&#038;ver=1.7' type='text/css' media='all' />
+<script type='text/javascript' src='http://blog.oguzhan.info/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+<script type='text/javascript' src='http://blog.oguzhan.info/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<script type='text/javascript' src='http://blog.oguzhan.info/wp-content/themes/independent-publisher/js/fade-post-title.js?ver=5.0.8'></script>
+<script type='text/javascript' src='http://blog.oguzhan.info/wp-content/themes/independent-publisher/js/enhanced-comment-form.js?ver=1.0'></script>
+<link rel='https://api.w.org/' href='http://blog.oguzhan.info/index.php?rest_route=/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://blog.oguzhan.info/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://blog.oguzhan.info/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Go için Unit Test ve Integration Test Ayrımı' href='http://blog.oguzhan.info/?p=1562' />
+<meta name="generator" content="WordPress 5.0.8" />
+<link rel="canonical" href="http://blog.oguzhan.info/?p=1589" />
+<link rel='shortlink' href='http://blog.oguzhan.info/?p=1589' />
+<link rel="alternate" type="application/json+oembed" href="http://blog.oguzhan.info/index.php?rest_route=%2Foembed%2F1.0%2Fembed&#038;url=http%3A%2F%2Fblog.oguzhan.info%2F%3Fp%3D1589" />
+<link rel="alternate" type="text/xml+oembed" href="http://blog.oguzhan.info/index.php?rest_route=%2Foembed%2F1.0%2Fembed&#038;url=http%3A%2F%2Fblog.oguzhan.info%2F%3Fp%3D1589&#038;format=xml" />
+</head>
+
+<body class="post-template-default single single-post postid-1589 single-format-standard h-entry hentry" itemscope="itemscope" itemtype="http://schema.org/WebPage">
+
+
+
+<div id="page" class="site">
+	<header id="masthead" class="site-header" role="banner" itemscope itemtype="http://schema.org/WPHeader">
+
+		<div class="site-header-info">
+											
+					<a class="site-logo" href="http://blog.oguzhan.info">
+				<img alt='' src='http://0.gravatar.com/avatar/3a9dc8db324dc41de538f0f48e4bd45d?s=100&#038;d=mm&#038;r=g' srcset='http://0.gravatar.com/avatar/3a9dc8db324dc41de538f0f48e4bd45d?s=200&#038;d=mm&#038;r=g 2x' class='avatar avatar-100 photo u-photo' height='100' width='100' />			</a>
+		
+		<div class="site-title"><span class="byline"><span class="author p-author vcard h-card"><a class="u-url url fn n" href="http://blog.oguzhan.info" title="View all posts by Oğuzhan YILMAZ" rel="author">Oğuzhan YILMAZ</a></span></span></div>
+		<div class="site-description">MaestroPanel Tech. Lead</div>
+
+		<div id="menu-social" class="menu"><ul id="menu-social-items" class="menu-items"><li id="menu-item-942" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-942"><a href="https://www.github.com/c1982"><span class="screen-reader-text">Github</span></a></li>
+<li id="menu-item-824" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-824"><a href="http://twitter.com/c1982"><span class="screen-reader-text">@c1982</span></a></li>
+<li id="menu-item-823" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-823"><a href="http://tr.linkedin.com/in/oguzhanyilmaz"><span class="screen-reader-text">LinkedIn</span></a></li>
+</ul></div>
+		<div class="site-published-separator"></div>
+		<h2 class="site-published">Published</h2>
+		<h2 class="site-published-date"><a href="http://blog.oguzhan.info/?p=1589" title="Golang + Git Flow + Docker ve Gitlab CI" rel="bookmark"><time class="entry-date dt-published" datetime="2019-03-31T01:24:36+0200" itemprop="datePublished" pubdate="pubdate">31/03/2019</time></a></h2>
+				
+									</div>
+
+				
+			</header>
+	<!-- #masthead .site-header -->
+
+	<div id="main" class="site-main">
+
+	<div id="primary" class="content-area">
+		<main id="content" class="site-content" role="main">
+
+			
+				
+<article id="post-1589" class="post-1589 post type-post status-publish format-standard category-uncategorized" itemscope="itemscope" itemtype="http://schema.org/BlogPosting" itemprop="blogPost">
+		<header class="entry-header">
+					<h2 class="entry-title-meta">
+			<span class="entry-title-meta-author">
+				<span class="byline"><span class="author p-author vcard h-card"><a class="u-url url fn n" href="http://blog.oguzhan.info" title="View all posts by Oğuzhan YILMAZ" rel="author">Oğuzhan YILMAZ</a></span></span>			</span>
+				in <a href="http://blog.oguzhan.info/?cat=1" rel="category">Eski Blog Yazılarım</a>				<span class="entry-title-meta-post-date">
+				<span class="sep"> | </span>
+					<a href="http://blog.oguzhan.info/?p=1589" title="Golang + Git Flow + Docker ve Gitlab CI" rel="bookmark"><time class="entry-date dt-published" datetime="2019-03-31T01:24:36+0200" itemprop="datePublished" pubdate="pubdate">31/03/2019</time></a>			</span>
+							</h2>
+			<h1 class="entry-title p-name" itemprop="name">Golang + Git Flow + Docker ve Gitlab CI</h1>
+			</header>
+	<!-- .entry-header -->
+	<div class="entry-content e-content" itemprop="mainContentOfPage">
+		
+<p>Kariyerimde zaman zaman sistem yöneticisi rolünde olduğumdan olsa gerek DevOps işleri hep eğlenceli geliyor. Arada bir yazılım firmalarına yolum düşünce lafı açılır hep <a href="https://en.wikipedia.org/wiki/Continuous_integration">Continuous Integration</a> süreçlerini nasıl tasarlıyorsunuz diye. O nedenle temel bir CI Pipeline&#8217;ı nasıl tasarlayıp yazma gereği hissettim.</p>
+
+
+
+<p>Öncelike CI için tool seçmek çok mesele <a href="https://jenkins.io/">Jenkis</a>, <a href="https://travis-ci.org/">Travis</a>, <a href="https://www.gocd.org/">GoCD</a>, <a href="https://circleci.com/">Circle CI</a> derken kendini araba pazarındaymış gibi hissediyorsun. Aşağıdak grafik bir şeyler anlatıyor ama local SCM kullanırken aynı zamanda CI&amp;D işlerini de aradan çıkartayım dediğinizde <a href="https://about.gitlab.com/product/continuous-integration/">Gitlab</a> güzel seçenek.</p>
+
+
+
+<div class="wp-block-image"><figure class="aligncenter is-resized"><img src="https://about.gitlab.com/images/home/forrester-ci-wave-graphic.svg" alt="Best in class continuous integration" width="360" height="350"/></figure></div>
+
+
+
+<h2>Senaryo</h2>
+
+
+
+<p>Tam gerçek hayat senaryosu olmasa da <a href="https://golang.org">Go Programlama Dilini</a> kullanarak basit bir ugulama yazacağız. Bu uygulama bir web servisi olacak ve parametre geçilen string&#8217;in MD5 hash&#8217;ini döndüren bir fonksiyona sahip olacak o kadar. <br>Daha sonra uygulamayı da Docker container&#8217;ı ile dağıtılabilir hale getireceğiz (<a href="https://docs.docker.com/get-started/">Dockerize</a>) ve CI üzerinden bu dağıtımın otomatik olarak işlemesini sağlayacağız.</p>
+
+
+
+<h2>Uygulama</h2>
+
+
+
+<p>Verilen değerin MD5 hashini geri dönen bir Web servisine ihtiyacım olduğundan aşağıdaki şekilde yazıp geçtim. Maksat çalışan uygulamamız olsun, esas konu CI.</p>
+
+
+
+<p> Uygulama aşağıdaki gibi:</p>
+
+
+
+<script src="https://gist.github.com/c1982/c31214de2dd2726544d7e32bc866c013.js"></script>
+
+
+
+<pre class="wp-block-preformatted">go run main.go</pre>
+
+
+
+<p>dediğimizde 8080 portunu dinleyen bit HTTP servisi ayaklanacak</p>
+
+
+
+<pre class="wp-block-preformatted">curl http://localhost:8080/?q=hello+gophers</pre>
+
+
+
+<p>olarak istediğimizde ise MD5 hash dönüyorsa çalışıyordur.</p>
+
+
+
+<p>Uygulamamız hazır olduktan sonra ufak bir iki teamüle değinmek istiyorum. Çünkü olayı sistematik hale getirmek önemli. </p>
+
+
+
+<p>Git Flow ile ilerleyelim.</p>
+
+
+
+<h2>Git Flow</h2>
+
+
+
+<figure class="wp-block-image"><img src="https://danielkummer.github.io/git-flow-cheatsheet/img/git-flow-commands.png" alt=""/></figure>
+
+
+
+<p>Özellikle birden fazla kişi aynı projede çalışıyorsa Git kullanımında belirli bir model belirlemek işleri daha sistematik hale getiriyor. Bu model ise genelde <a href="https://datasift.github.io/gitflow/IntroducingGitFlow.html">Git Flow</a> olur.</p>
+
+
+
+<p>Hemen süper hızlı <strong>Git Flow 101</strong> aşağıdaki gibi:</p>
+
+
+
+<p>Projeye git flow eklemek için:</p>
+
+
+
+<pre class="wp-block-preformatted">git flow init</pre>
+
+
+
+<p>Projede yeni bir özellik eklemeye karar verdiğinizde kullanabileceğiniz komut feature start olur. Özellik adı <em>mobile_odeme</em> bu arada.</p>
+
+
+
+<pre class="wp-block-preformatted">git flow feature start mobile_odeme</pre>
+
+
+
+<p>Özelliği geliştrdiniz, düzgün çalıştığından emin oldunuz. Bu özelliği aşağıdaki komut ile sonlandırmalısınız. Finish yaptığınız özellik otomatik olarak develop branch&#8217;ına merge olacak ve üzerinde çalıştığınız branch silinecektir.</p>
+
+
+
+<pre class="wp-block-preformatted">git flow feature finish mobile_odeme</pre>
+
+
+
+<p>Yol haritanızdaki belirli özellikleri tamamladınız ve milestone&#8217;a eriştiniz. Artık yeni bir release çıkma vakti geldi. Aşağıdaki komut release isminde yeni bir branch açacaktır.</p>
+
+
+
+<pre class="wp-block-preformatted">git flow release start v1.0.0</pre>
+
+
+
+<p>v1.0.0 branch&#8217;ında release ile ilgili son değişiklikleri yapıp commitlediniz artık yeni bir release için hazırsınız. Finish yapmalısınız</p>
+
+
+
+<pre class="wp-block-preformatted">git flow release finish v1.0.0</pre>
+
+
+
+<p>Finish yaptıktan sonra git flow develop ve master branchlarına v1.0.0 brach&#8217;ını merge edecek ve v1.0.0 isminde yeni bir tag ekleyecektir.</p>
+
+
+
+<p>Bu aşamada tag&#8217;ı push etmek için:</p>
+
+
+
+<pre class="wp-block-preformatted">git push origin --tags</pre>
+
+
+
+<p>Release çıktıktan sonra uygulamada hatalar farkettiniz ve düzeltmeniz gerekiyor. Bu aşamada her bir hata için hotfix başlatabilirsiniz. Hotfix master&#8217;ı baz alarak yeni bir branch başlatır.</p>
+
+
+
+<pre class="wp-block-preformatted">git flow hotfix start v1.0.1-fix</pre>
+
+
+
+<p>Gerekli düzenlemeleri yaptınız ve hatayı giderdiğinizden emin oldunuz. Hotfix&#8217;i finish yapıp master ve develop&#8217;a merge olmasını sağlayabilirsiniz.</p>
+
+
+
+<pre class="wp-block-preformatted">git flow hotfix finish v1.0.1-fix<br></pre>
+
+
+
+<p>Git Flow ile ilgili bakılması gereken kaynaklar:</p>
+
+
+
+<ul><li><a href="https://nvie.com/posts/a-successful-git-branching-model/">https://nvie.com/posts/a-successful-git-branching-model/</a></li><li><a href="https://danielkummer.github.io/git-flow-cheatsheet/index.tr_TR.html">https://danielkummer.github.io/git-flow-cheatsheet/index.tr_TR.html</a></li></ul>
+
+
+
+<p>Bu arada Git Flow tabi mükemmel bir model değil. Alternatif olarak aşağıdakilere bir göz atabilirsiniz.</p>
+
+
+
+<ul><li><a href="https://hackernoon.com/gitflow-is-a-poor-branching-model-hack-d46567a156e7">https://hackernoon.com/gitflow-is-a-poor-branching-model-hack-d46567a156e7</a></li><li><a href="https://www.endoflineblog.com/gitflow-considered-harmful">https://www.endoflineblog.com/gitflow-considered-harmful</a></li><li><a href="http://scottchacon.com/2011/08/31/github-flow.html">http://scottchacon.com/2011/08/31/github-flow.html</a></li></ul>
+
+
+
+<h3>Anlamsal Sürümleme (Semantic Versioning)</h3>
+
+
+
+<figure class="wp-block-image"><img src="https://aajuhe.github.io/images/Project%200/Semantic%20Versioning.png" alt="Semantic Versioning"/></figure>
+
+
+
+<p>Yeri gelmişken parantez açıp anlamsal sürümlemeye de değinmek lazımki git flow release ve hotfix aşamalarında nasıl arttıracağımızı bilelim.</p>
+
+
+
+<p>Dikkat ederseniz v1.0.0 gibi bir versiyon adı kullandık. Burada <strong>v1</strong> projenin büyük bir özelliği devreye alındıysa yada yazılım üzerinde büyük bir değişiklik olduysa Major sayılıp en baştaki bir arttırılır.</p>
+
+
+
+<p>İkinci basamak ise yazılıma yeni eklenen bir özellik veya iyileştirme ile alakalı ilerlemeyi temsil eder.</p>
+
+
+
+<p>Son basamak ise yazılımdaki hataların giderilmesi veya build edilmesi ile ilgili alandır. Örneğin her bir hotfix&#8217;de bir artar gibi.</p>
+
+
+
+<p><a href="https://semver.org/lang/tr/">semver.org</a> üzerinde çok güzel açıklamalar mevcut. </p>
+
+
+
+<p>Semver&#8217;e yardımcı olacak commit adetleride ayrıca değinilmesi gereken bir konu. Onu da aşağıdaki adresten inceleyebilirsiniz.</p>
+
+
+
+<p><a href="https://semantic-release.gitbook.io/semantic-release/">https://semantic-release.gitbook.io/semantic-release/</a></p>
+
+
+
+<h4>Commit Mesajlaları</h4>
+
+
+
+<p>Semantic Release için otomatize araçlar mevcut yani direkt commit mesajlarınıza bakıp versionu bump edebiliyor. Bunun için commit mesajlarınızada bir sistematiğe oturtmanız gerekiyor. Aşağıda örnekleri ufaktan vereyim.</p>
+
+
+
+<ul><li>feat: kullanıcı girişi için 2FA özelliği eklendi</li><li>fix: 2FA özelliğindeki SMS hatası giderildi issue: #1233</li><li>docs: README&#8217;yi günelledim</li><li>style: kod üzerindeki uzun satırları düzenledim. Formatlarım vs.</li><li>refactor: bazı değişkenlerin isimlerini büyük harfe çevrdim. Okunabilirliği arttırdım.</li><li>test: eksik olan testleri ekledim.</li><li>chore: Ansible scriptleri güncellendi. gitlab-ci üzerine docker build eklendi.</li></ul>
+
+
+
+<p>Konu ile ilgili bir iki kaynak:</p>
+
+
+
+<ul><li><a href="https://seesparkbox.com/foundry/semantic_commit_messages">https://seesparkbox.com/foundry/semantic_commit_messages</a></li><li><a href="http://karma-runner.github.io/1.0/dev/git-commit-msg.html">http://karma-runner.github.io/1.0/dev/git-commit-msg.html</a></li></ul>
+
+
+
+<h2>Dockerize</h2>
+
+
+
+<p>Dockerize diyorum hep uygulamayı container&#8217;ın içine tıkmak anlamında, telafuzu kolay oluyor benim için. Aslında <a href="https://mobyproject.org/">moby</a> ayağına Containerized demek lazım yalnız bir türlü dilim dönmüyor buna :)</p>
+
+
+
+<p>Senaryomuza göre yazıdığımız uygulamayı container üzerinde çalıştıracağız. Bunun için uygulamamızın image&#8217;ını build etmemiz gerekiyor. Aşağıdaki <a href="https://gist.github.com/c1982/ed980e1f3d4d49a6656c1ee12aa8720e">Dockerfile</a> bu işi yapacak.</p>
+
+
+
+<script src="https://gist.github.com/c1982/ed980e1f3d4d49a6656c1ee12aa8720e.js"></script>
+
+
+
+<p>Dikkat ederseniz iki tane FROM göreceksiniz. Birincisi Go uygulamamızı build etmek için kullandığımız <a href="https://hub.docker.com/_/golang">golang:1.11.6</a> tag&#8217;ına sahip ve &#8220;builder&#8221; ismi verilmiş image. <br>Diğeri ise iron/base tag&#8217;ına sahip. Uygulamayı çalıştıracak image. Buna container camiasında <a href="https://docs.docker.com/develop/develop-images/multistage-build/">multi-stage</a> diyorlar.  İlk image ile delenip oluşturulan binary dosyası  <a href="https://docs.docker.com/engine/reference/builder/#copy">COPY</a>&#8216;nin &#8211;from parametresi ile alınıp diğer image&#8217;a kopyalanıyor. </p>
+
+
+
+<p>Yukarıdaki Dockerfile&#8217;ı aşağıdaki kod ile build edebilirsiniz.</p>
+
+
+
+<pre class="wp-block-preformatted">docker build --build-arg VERSION=v1.0.0 -t md5go:latest .<br></pre>
+
+
+
+<p>Ortaya çıkan image&#8217;ı run etmek isterseniz de aşağıdaki komut yeterli.</p>
+
+
+
+<pre class="wp-block-preformatted">docker run -d --name md5go -p 8080:8080 md5go:latest</pre>
+
+
+
+<p>Düzgün çalıştığını doğrulamak isterseniz bir curl isteği ile bakabilirsiniz.</p>
+
+
+
+<pre class="wp-block-preformatted">curl http://localhost:8080/\?q=hello<br></pre>
+
+
+
+<blockquote class="wp-block-quote"><p>Bu arada Docker build&#8217;lerini daha iyi yönetebilmek ve kompleks işlemlere girişebilmek için özellikle CI üzerinde <a href="https://www.habitus.io/">Habitus</a> aracını kullanabilirsiniz.</p><p>Diğer bir araç ise <a href="https://buildah.io/">Buildah</a>! Docker daemon&#8217;undan bağımsız bir araç yine CI süreçlerinde daha iyi seçenek olabiliyor.</p></blockquote>
+
+
+
+<h2>Docker Registry</h2>
+
+
+
+<p>Gelelim uygulamayı dağıtmaya. Öncelikle container bazlı bir çalışma ortamınız olacaksa image&#8217;ları tutacağınız ve versiyonlayabileceğiniz bir registry&#8217;nizin olması gerekiyor. Ben production&#8217;da Amazon&#8217;un <a href="https://aws.amazon.com/tr/ecr/">ECR</a>&#8216;sini kullanıyorum. Ama yazıda Docker HUB&#8217;dan gittim.</p>
+
+
+
+<p>Alternatif olarak aşağıda private registry olarak kullanabileceğiniz bir kaç araç var.</p>
+
+
+
+<ul><li><a href="https://goharbor.io/">https://goharbor.io/</a></li><li><a href="https://hub.docker.com/_/registry/">https://hub.docker.com/_/registry/</a></li><li><a href="https://github.com/miguelmota/ipdr">https://github.com/miguelmota/ipdr</a></li></ul>
+
+
+
+<p>Bunların yanında Gitlab ile gelen yerel <a href="https://docs.gitlab.com/ee/user/project/container_registry.html">Registry servisini</a> veya <a href="https://hub.docker.com/">Docker Hub</a>&#8216;ı kullanabilirsiniz.</p>
+
+
+
+<h2>Gitlab CI</h2>
+
+
+
+<figure class="wp-block-image"><img src="https://about.gitlab.com/images/blogimages/cicd_pipeline_infograph.png" alt="CI/CD Overview"/></figure>
+
+
+
+<p>Gitlab her ne kadar Source Control Manager olarak geliştirilsede <a href="https://about.gitlab.com/product/continuous-integration/">CI özelikleri</a> bir çok ihtiyaca çözüm sunar nitelikte. Özellikle <a href="https://docs.gitlab.com/runner/">Gitlab Runner</a>&#8216;ın bağımsız tasarımı oldukça esneklik katıyor. </p>
+
+
+
+<p>Gitlab üzerinde host ettiğimiz kaynak kodunu CI üzerinde yönetebilmek için yml dosyasını kullanıyoruz. Kısaca projenin root&#8217;una <strong>.gitlab-ci.yml</strong> isimli dosyayı ekleyip ilgili direktifleri yazarak tüm süreci yönetebilirsiniz.</p>
+
+
+
+<p>Şimdi tasaraldığımız sürece geçelim. Aşağıda iki aşamalı bir CI süreci mevcut. İnceleyin.</p>
+
+
+
+<script src="https://gist.github.com/c1982/b1d0eaa95d12e7e77ff20e464f8f8191.js"></script>
+
+
+
+<p>Yukarıdaki direktifleri açıklamaya çalışırsak:</p>
+
+
+
+<p>En önemli konulardan biri Executor. Gitlab Runner&#8217;ın bir ton <a href="https://docs.gitlab.com/runner/executors/README.html">executor</a>&#8216;u var. Yani CI ortamı bash üzerinde mi çalışacak  yoksa docker container&#8217;ının içinde mi çalışacak diye register ederken söylüyorsunuz. Bizim senaryomuzda Executor docker.  Yani tüm süreç Docker container&#8217;ının içinde işleyecek ve kaybolacak.</p>
+
+
+
+<pre class="wp-block-preformatted">image: docker<br><br>services:<br>    - docker:dind</pre>
+
+
+
+<p>image ve services  direktifleri bütün sürecin docker isimli bir image üzerinden ayaklandırılan container içinde gerçekleşeceğini söylüyor. <br>image: direktifini sadece kendi süreciniz için oluşturduğunuz image&#8217;ı da verebilirsiniz. Hatta öyle yapsanız daha hızlı olur.</p>
+
+
+
+<p>services: altındaki <a href="https://hub.docker.com/r/gitlab/dind">docker:dind</a> aslında gitlab&#8217;ın image&#8217;ı. İçinde docker, docker-compose ve docker-machine gibi araçlar hazır geliyor.</p>
+
+
+
+<pre class="wp-block-preformatted">stages:<br>    - gosec<br>    - build<br></pre>
+
+
+
+<p>Stages alanı gitlab pipeline&#8217;ının tüm bölümlerini belirlemenizi sağlıyor. Bizim senaryoda statik kod analizi job&#8217;ı var. Arkasından build edilip push edildiği için iki bölüm belirledik. Genelde test, build, deploy, run diye olur. Sonra oluşturulacak job&#8217;ları buna bağlıyoruz.</p>
+
+
+
+<pre class="wp-block-preformatted">variables:  <br>    VERSION: $CI_COMMIT_TAG  <br>    APP_NAME: md5go  <br>    REG_USERNAME: $REG_USR_SECRET  <br>    REG_PASSWORD: $REG_PASSWD_SECRET</pre>
+
+
+
+<p>Variables direktifi aslında bir çeşit Environment Variables. Hem CI direktifleri içinde değişkenmiş gibi davranıyor hem de Executor dediğimiz pipeline&#8217;ın çalışma ortamına system environment değişkeni olarak aktarılıyor.</p>
+
+
+
+<p>Burada VERSION değişkenine direkt Gitlab&#8217;ın ön <a href="https://docs.gitlab.com/ee/ci/variables/">tanımlı variable</a>&#8216;larından $CI_COMMIT_TAG&#8217;ı atadık ki versiyonu alalım.</p>
+
+
+
+<p>REG_USERNAME ve REG_PASSWORD değişkenleri hassas olduğundan <a href="https://gitlab.masomogaming.com/help/ci/variables/README#variables">direkt Gitlab üzerinde daha önce tanımlanmış secret</a>&#8216;lardan alıyor.</p>
+
+
+
+<pre class="wp-block-preformatted">build:<br>    stage: build</pre>
+
+
+
+<p>Build direktifi aslında Job denen iş parçasının ismi. Burada kafa karışıklığı olmasın farklı bir isimde de verebilirdik. Örneğin derle_ve_gonder gibi. <br>stage: build ise bu iş parçasının hangi stage&#8217;e ait olduğu. Yukarıda tanımladığımız stages direktifinde tanımladığımız build aşamasına ait olduğunu belirtiyoruz.</p>
+
+
+
+<pre class="wp-block-preformatted">script:<br>    - echo $VERSION    <br>    - docker build --build-arg VERSION=$VERSION -t $APP_NAME:$VERSION .    <br>    - docker tag $APP_NAME:$VERSION $REG_USERNAME/$APP_NAME:$VERSION<br>    - docker login -u $REG_USERNAME -p $REG_PASSWORD<br>    - docker push $REG_USERNAME/$APP_NAME:$VERSION<br></pre>
+
+
+
+<p>script: direktifi bildiğiniz shell komutları yazıyormuşcasına takılabileceğiniz bir alandır. Komutlar yukarıdan aşağıya sırası ile işler.<br>Biz burada projenin root&#8217;unda bulunan Dockerfile dosyasını build ediyoruz. Build olurken Go uygulamamızın derlenmesini sağlıyoruz ve bir docker image&#8217;ı haline getiriyoruz. Sonra Docker Hub&#8217;a login olup image&#8217;ı gönderiyoruz. </p>
+
+
+
+<pre class="wp-block-preformatted">only:    <br>    - /^v[0-9|\.]+/<br>except:<br>    - branches</pre>
+
+
+
+<p><a href="https://docs.gitlab.com/ee/ci/yaml/#onlyexcept-basic">Only direktifi</a> Job&#8217;ları tetiklenmesi için kullanılan bir mekanizma. Bu alan bir regex&#8217;e göre tetiklendiği gibi branch bazlı, commit mesajı bazlı da tetiklenebiliyor. Biz burada regex&#8217;i seçtik. <br><a href="https://docs.gitlab.com/ee/ci/yaml/#onlyexcept-basic">Except direktifine</a> branches dediğimizde ise branch&#8217;lara gelen herhangi bir commit&#8217;i dikkate alma anlamına geliyor. Böylece git&#8217;in çeşitli olaylarında bu job&#8217;ları çalıştırıp çalıştırmamayı bu iki direktif ile yönetebiliyorsunuz.</p>
+
+
+
+<p>Buradaki only direktifindeki regex sadece yeni bir tag push edildiğinde ve bu tag&#8217;ın v1.0.0 gibi bir formata tekabul ettiğinde tetikleniyor.</p>
+
+
+
+<pre class="wp-block-preformatted">tags:<br>    - docker-runner</pre>
+
+
+
+<p>Bu direktif ise Gitlab Runner ile ilgili. Bir projede birden fazla runner&#8217;ı farklı taglar vererek kullanabilirsiniz. Örneğin bu senaryoda repository&#8217;e tanımlı docker-runner tag&#8217;ına sahip bir runner mevcut. Tags direktifi ile ilgili tag&#8217;a sahip runner&#8217;ı kullanmak istediğimizi belirtiyoruz.</p>
+
+
+
+<h2>Gitlab Runner</h2>
+
+
+
+<p><a href="https://gitlab.com/gitlab-org/gitlab-runner">Gitlab Runner açık kaynak olarak edinebildiğiniz</a> Gitlab&#8217;ın üzerindeki kaynak kodu alıp belirli işlemler yaptırıp tekrar sonucunu Gitlab&#8217;a gönderen bir servis.</p>
+
+
+
+<p>CI pipeline&#8217;ı aktifleştirme için öncelikle gitlab-runner&#8217;ı Gitlab&#8217;a register etmek gerekiyor. Gitlab Runner&#8217;ın kurulumu ve Gitlab&#8217;e register edilmesi ile alakalı aşağıdaki kaynakları inceleyebilirsiniz.</p>
+
+
+
+<ul><li><a href="https://docs.gitlab.com/runner/install/">https://docs.gitlab.com/runner/install/</a></li><li><a href="https://docs.gitlab.com/runner/register/">https://docs.gitlab.com/runner/register/</a></li></ul>
+
+
+
+<p>Gitlab Runner&#8217;ı kurup, register edildiğini varsayıyorum. Bundan sonrası bir iki <a href="https://docs.gitlab.com/runner/configuration/advanced-configuration.html">config</a>&#8216;e bakıyor.  Aşağıda kullandığım örnek bir runner config&#8217;i mevcut.</p>
+
+
+
+<script src="https://gist.github.com/c1982/b094d164460854e3b809ad0706381580.js"></script>
+
+
+
+<p>Dikkat ederseniz name direktifindeki değeri, gitlab-ci dosyamızın içinde tag olarak kullanmıştık ki istediğimiz runner&#8217;ı çalıştırabilelim. Ayrıca runner&#8217;ın kullanacağı DNS sunucularını da elle vermek daha stabil hale getiriyor. Burada Google ve Verizon&#8217;un DNS&#8217;lerini kullanıyorum. <a href="https://docs.gitlab.com/runner/configuration/advanced-configuration.html">Diğer ayarların ne işe yaradıklarına ise buradan ulaşabilirsiniz. </a></p>
+
+
+
+<h2> Tetikleme</h2>
+
+
+
+<p>Gitlab&#8217;daki kodu bilgisayarınıza kopyaladınız. Sonra git-flow&#8217;u takip ederek yeni feature&#8217;lar ekleyip son olarak yeni bir release çıkarttınız. Release&#8217;i sonlandırıp push ettikten sonra aşağıdaki komut ile tag&#8217;larıda push ettiğiniz anda CI tetiklenecektir.</p>
+
+
+
+<pre class="wp-block-preformatted">git push origin --tags</pre>
+
+
+
+<p>Hemen arkasından Gitlab CI yeni bir Pipeline devreye alıp Job&#8217;ları çalıştıracak ve Docker HUB&#8217;a yeni versiyon tag&#8217;ı ile yeni image&#8217;ı push edecektir.</p>
+
+
+
+<p>Konu ile ilgili kodlara aşağıdan ulaşabilirsiniz:</p>
+
+
+
+<ul><li><a href="https://github.com/c1982/md5go">https://github.com/c1982/md5go</a></li></ul>
+
+		
+									</div>
+	<!-- .entry-content -->
+
+			<div class="post-author-bottom">
+			<div class="post-author-card">
+				<a class="site-logo" href="http://blog.oguzhan.info">
+					<img alt='' src='http://0.gravatar.com/avatar/3a9dc8db324dc41de538f0f48e4bd45d?s=100&#038;d=mm&#038;r=g' srcset='http://0.gravatar.com/avatar/3a9dc8db324dc41de538f0f48e4bd45d?s=200&#038;d=mm&#038;r=g 2x' class='avatar avatar-100 photo u-photo' height='100' width='100' />				</a>
+
+				<div class="post-author-info">
+					<div class="site-title">
+						<span class="byline"><span class="author p-author vcard h-card"><a class="u-url url fn n" href="http://blog.oguzhan.info" title="View all posts by Oğuzhan YILMAZ" rel="author">Oğuzhan YILMAZ</a></span></span>					</div>
+
+					<div class="site-description">MaestroPanel Tech. Lead</div>
+				</div>
+				<div class="post-published-date">
+					<h2 class="site-published">Published</h2>
+					<h2 class="site-published-date"><a href="http://blog.oguzhan.info/?p=1589" title="Golang + Git Flow + Docker ve Gitlab CI" rel="bookmark"><time class="entry-date dt-published" datetime="2019-03-31T01:24:36+0200" itemprop="datePublished" pubdate="pubdate">31/03/2019</time></a></h2>
+										
+					
+				</div>
+			</div>
+		</div>
+		<!-- .post-author-bottom -->
+			
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2314632896690352"
+     data-ad-slot="9034475089"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+	
+	<footer class="entry-meta">
+		
+					<div id="share-comment-button">
+				<button>
+					<i class="share-comment-icon"></i>Yorum Bırak				</button>
+			</div>
+		
+			</footer>
+	<!-- .entry-meta -->
+
+</article><!-- #post-1589 -->
+
+				
+	<div id="commentform-top"></div> <!-- do not remove; used by jQuery to move the comment reply form here -->
+		<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title"> <small><a rel="nofollow" id="cancel-comment-reply-link" href="/?p=1589" style="display:none;">Cancel Reply</a></small></h3>			<form action="http://blog.oguzhan.info/wp-comments-post.php" method="post" id="commentform" class="comment-form" novalidate>
+				<div id="main-reply-title"><h3>Yorum Bırak</h3></div><div class="comment-form-reply-title"><p>Comment</p></div><p class="comment-form-comment" id="comment-form-field"><textarea id="comment" name="comment" cols="60" rows="6" aria-required="true"></textarea></p><p class="comment-form-author"><label for="author">Name</label><input id="author" name="author" type="text" value="" aria-required='true' /></p>
+<p class="comment-form-email"><label for="email">Email</label><input id="email" name="email" type="text" value="" aria-required='true' /></p>
+<p class="comment-form-url"><label for="url">Website</label><input id="url" name="url" type="text" value="" /></p>
+<p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="Submit Comment" /> <input type='hidden' name='comment_post_ID' value='1589' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</p><p style="display: none;"><input type="hidden" id="spamtrap_get" name="spamtrap_get" value="83ac218417" /><input type='hidden' id='spamtrap_js' name='spamtrap_js' value='' /><script type='text/javascript'>jQuery( '#spamtrap_js' ).val( '70f40252a8' );</script></p>			</form>
+			</div><!-- #respond -->
+	
+
+	<div id="comments" class="comments-area">
+				
+			
+			
+			<ol class="commentlist">
+						<li class="comment even thread-even depth-1 u-comment h-cite" id="li-comment-38458">
+		<article id="comment-38458" class="comment">
+			<footer>
+				<div class="comment-author vcard">
+					<img alt='' src='http://2.gravatar.com/avatar/b19cb57f16974a7114f32a244e8ea2ea?s=48&#038;d=mm&#038;r=g' srcset='http://2.gravatar.com/avatar/b19cb57f16974a7114f32a244e8ea2ea?s=96&#038;d=mm&#038;r=g 2x' class='avatar avatar-48 photo u-photo' height='48' width='48' />					<cite class="fn">Tolga Boztuna</cite>									</div>
+				<!-- .comment-author .vcard -->
+				<div class="comment-meta commentmetadata">
+					<a href="http://blog.oguzhan.info/?p=1589#comment-38458">
+						<time pubdate datetime="2019-04-03T01:16:13+00:00">
+							03/04/2019						</time>
+					</a>
+									</div>
+				<!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content "><p>CI/CD sürecini çok sade bir şekilde anlatmışsınız ayrıca Go üzerinden gitmeniz süper olmuş. Elinize sağlık hocam.</p>
+</div>
+
+			<div class="reply">
+				<a rel='nofollow' class='comment-reply-link' href='http://blog.oguzhan.info/?p=1589&#038;replytocom=38458#respond' onclick='return addComment.moveForm( "comment-38458", "38458", "respond", "1589" )' aria-label='Reply to Tolga Boztuna'>Reply to Tolga</a>			</div>
+			<!-- .reply -->
+		</article><!-- #comment-## -->
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 u-comment h-cite" id="li-comment-40458">
+		<article id="comment-40458" class="comment">
+			<footer>
+				<div class="comment-author vcard">
+					<img alt='' src='http://2.gravatar.com/avatar/e8e3ee137595150c065df2acb36edb93?s=48&#038;d=mm&#038;r=g' srcset='http://2.gravatar.com/avatar/e8e3ee137595150c065df2acb36edb93?s=96&#038;d=mm&#038;r=g 2x' class='avatar avatar-48 photo u-photo' height='48' width='48' />					<cite class="fn">Hakan</cite>									</div>
+				<!-- .comment-author .vcard -->
+				<div class="comment-meta commentmetadata">
+					<a href="http://blog.oguzhan.info/?p=1589#comment-40458">
+						<time pubdate datetime="2019-11-24T18:14:35+00:00">
+							24/11/2019						</time>
+					</a>
+									</div>
+				<!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content "><p>Tek kelimeyle harika olmuş! Elinize sağlık.</p>
+</div>
+
+			<div class="reply">
+				<a rel='nofollow' class='comment-reply-link' href='http://blog.oguzhan.info/?p=1589&#038;replytocom=40458#respond' onclick='return addComment.moveForm( "comment-40458", "40458", "respond", "1589" )' aria-label='Reply to Hakan'>Reply to Hakan</a>			</div>
+			<!-- .reply -->
+		</article><!-- #comment-## -->
+		</li><!-- #comment-## -->
+			</ol><!-- .commentlist -->
+
+			
+		
+		
+		
+		
+							
+	</div><!-- #comments .comments-area -->
+
+
+				
+				
+			
+		</main>
+		<!-- #content .site-content -->
+	</div><!-- #primary .content-area -->
+
+<div id="secondary" class="widget-area" role="complementary">
+	</div><!-- #secondary .widget-area -->
+
+</div><!-- #main .site-main -->
+
+<footer id="colophon" class="site-footer" itemscope="itemscope" itemtype="http://schema.org/WPFooter" role="contentinfo">
+	<div class="site-info">
+		<a href="http://independentpublisher.me" rel="designer" title="Independent Publisher: A beautiful reader-focused WordPress theme, for you.">Independent Publisher</a> empowered by <a href="http://wordpress.org/" rel="generator" title="WordPress: A free open-source publishing platform">WordPress</a>	</div>
+	<!-- .site-info -->
+</footer><!-- #colophon .site-footer -->
+</div><!-- #page .hfeed .site -->
+
+			<div style="display: none;">
+				<a href='mailto:gilchrest_blossom@mailxu.com'>gilchrest_blossom@mailxu.com</a> 
+<a href='mailto:jannell_carli@mailxu.com'>jannell_carli@mailxu.com</a> 
+			</div>
+			<script type='text/javascript' src='http://blog.oguzhan.info/wp-content/themes/independent-publisher/js/skip-link-focus-fix.js?ver=20130115'></script>
+<script type='text/javascript' src='http://blog.oguzhan.info/wp-includes/js/comment-reply.min.js?ver=5.0.8'></script>
+<script type='text/javascript' src='http://blog.oguzhan.info/wp-includes/js/wp-embed.min.js?ver=5.0.8'></script>
+
+</body>
+</html>
+�!�Ա�      ^4�^4�AK��^4�   !    :http://blog.oguzhan.info/?p=1589 necko:classified 1 strongly-framed 1 request-method GET response-head HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+Server: Microsoft-IIS/7.5
+X-Pingback: http://blog.oguzhan.info/xmlrpc.php
+Link: <http://blog.oguzhan.info/index.php?rest_route=/>; rel="https://api.w.org/", <http://blog.oguzhan.info/?p=1589>; rel=shortlink
+X-Powered-By: PHP/5.3.13, ASP.NET
+job: http://mstrp.nl/
+Date: Fri, 31 Jan 2020 11:34:26 GMT
+Content-Length: 37108
+ original-response-headers Content-Type: text/html; charset=UTF-8
+Server: Microsoft-IIS/7.5
+X-Powered-By: PHP/5.3.13
+X-Pingback: http://blog.oguzhan.info/xmlrpc.php
+Link: <http://blog.oguzhan.info/index.php?rest_route=/>; rel="https://api.w.org/"
+Link: <http://blog.oguzhan.info/?p=1589>; rel=shortlink
+X-Powered-By: ASP.NET
+job: http://mstrp.nl/
+Date: Fri, 31 Jan 2020 11:34:26 GMT
+Content-Length: 37108
+ ctid 1 eTLD1Access 1;0;3944946281, uncompressed-len 0 net-response-time-onstart 1253 net-response-time-onstop 1301 predictor::resource-count 31 predictor::http://blog.oguzhan.info/wp-includes/css/dist/block-library/style.min.css?ver=5.0.8 1,1,1580470465,4096 predictor::http://blog.oguzhan.info/wp-content/themes/independent-publisher/fonts/genericons/genericons.css?ver=3.1 1,1,1580470465,4096 predictor::http://blog.oguzhan.info/wp-content/themes/independent-publisher/style.css?ver=5.0.8 1,1,1580470465,4096 predictor::http://blog.oguzhan.info/wp-admin/admin-ajax.php?action=independent_publisher_customizer_css&ver=1.7 1,1,1580470465,4096 predictor::http://blog.oguzhan.info/wp-includes/js/jquery/jquery.js?ver=1.12.4 1,1,1580470465,4096 predictor::http://blog.oguzhan.info/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1 1,1,1580470465,4096 predictor::http://blog.oguzhan.info/wp-content/themes/independent-publisher/js/fade-post-title.js?ver=5.0.8 1,1,1580470465,4096 predictor::http://blog.oguzhan.info/wp-content/themes/independent-publisher/js/enhanced-comment-form.js?ver=1.0 1,1,1580470465,4096 predictor::http://blog.oguzhan.info/wp-includes/js/wp-emoji-release.min.js?ver=5.0.8 1,1,1580470465,4096 predictor::https://about.gitlab.com/images/home/forrester-ci-wave-graphic.svg 1,1,1580470465,4096 predictor::https://gist.github.com/c1982/c31214de2dd2726544d7e32bc866c013.js 1,1,1580470465,4096 predictor::https://danielkummer.github.io/git-flow-cheatsheet/img/git-flow-commands.png 1,1,1580470465,4096 predictor::https://aajuhe.github.io/images/Project%200/Semantic%20Versioning.png 1,1,1580470465,4096 predictor::https://gist.github.com/c1982/ed980e1f3d4d49a6656c1ee12aa8720e.js 1,1,1580470465,4096 predictor::https://about.gitlab.com/images/blogimages/cicd_pipeline_infograph.png 1,1,1580470465,4096 predictor::https://gist.github.com/c1982/b1d0eaa95d12e7e77ff20e464f8f8191.js 1,1,1580470465,4096 predictor::https://gist.github.com/c1982/b094d164460854e3b809ad0706381580.js 1,1,1580470465,4096 predictor::http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js 1,1,1580470465,4096 predictor::http://2.gravatar.com/avatar/b19cb57f16974a7114f32a244e8ea2ea?s=48&d=mm&r=g 1,1,1580470465,4096 predictor::http://2.gravatar.com/avatar/e8e3ee137595150c065df2acb36edb93?s=48&d=mm&r=g 1,1,1580470465,4096 predictor::http://blog.oguzhan.info/wp-content/themes/independent-publisher/js/skip-link-focus-fix.js?ver=20130115 1,1,1580470465,4096 predictor::http://blog.oguzhan.info/wp-includes/js/comment-reply.min.js?ver=5.0.8 1,1,1580470465,4096 predictor::http://blog.oguzhan.info/wp-includes/js/wp-embed.min.js?ver=5.0.8 1,1,1580470465,4096 predictor::https://github.githubassets.com/assets/gist-embed-13f839f7454b3a5b3bfbfd6d1e34ec9d.css 1,1,1580470465,4096 predictor::https://s.w.org/images/core/emoji/11/svg/2764.svg 1,1,1580470465,4097 predictor::https://adservice.google.com.tr/adsid/integrator.js?domain=blog.oguzhan.info 1,1,1580470465,4096 predictor::https://adservice.google.com/adsid/integrator.js?domain=blog.oguzhan.info 1,1,1580470465,4096 predictor::https://pagead2.googlesyndication.com/pagead/js/r20200129/r20190131/show_ads_impl_fy2019.js 1,1,1580470465,4096 predictor::https://partner.googleadservices.com/gampad/cookie.js?domain=blog.oguzhan.info&callback=_gfp_s_&client=ca-pub-2314632896690352 1,1,1580470465,4096 predictor::https://www.googletagservices.com/activeview/js/current/osd.js?cb=%2Fr20100101 1,1,1580470465,4096 predictor::http://tpc.googlesyndication.com/sodar/sodar2.js 1,1,1580470465,4096   ��
